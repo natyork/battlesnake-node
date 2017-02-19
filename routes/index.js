@@ -2,16 +2,16 @@ var config  = require('../config.json');
 var express = require('express');
 var router  = express.Router();
 
-// Handle GET request to '/'
-router.get(config.routes.info, function (req, res) {
-  // Response data
-  var data = {
-    color: config.snake.color,
-    head_url: config.snake.head_url,
-  };
 
-  return res.json(data);
-});
+// API docs don't indicate that we need a GET '/' callback
+// Handle GET request to '/'
+// router.get(config.routes.info, function (req, res) {
+//   // Response data
+//   var data = {
+//   };
+
+//   return res.json(data);
+// });
 
 // Handle POST request to '/start'
 router.post(config.routes.start, function (req, res) {
@@ -19,6 +19,9 @@ router.post(config.routes.start, function (req, res) {
 
   // Response data
   var data = {
+    color: config.snake.color,
+    head_url: config.snake.head_url,
+    name: config.snake.name,
     taunt: config.snake.taunt.start
   };
 
@@ -31,7 +34,7 @@ router.post(config.routes.move, function (req, res) {
 
   // Response data
   var data = {
-    move: 'north', // one of: ["north", "east", "south", "west"]
+    move: 'up', // one of: ["up", "right", "down", "left"]
     taunt: config.snake.taunt.move
   };
 
