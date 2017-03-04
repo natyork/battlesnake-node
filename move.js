@@ -39,7 +39,7 @@ var moveData = {
       "health_points": 50,
       "coords": [
         [
-          1,
+          3,
           0
         ],
         [
@@ -49,6 +49,26 @@ var moveData = {
         [
           1,
           0
+        ]
+      ]
+    },
+    {
+      "taunt": "goat gud",
+      "name": "your-snake",
+      "id": "12345-f0d7-4315-8c52-6b0ff23fb1fb",
+      "health_points": 93,
+      "coords": [
+        [
+          2,
+          0
+        ],
+        [
+          2,
+          1
+        ],
+        [
+          1,
+          1
         ]
       ]
     }
@@ -89,26 +109,22 @@ var moveData = {
 
 
 function walls(data) {
-  var maxX = data.width;
-  var maxY = data.height;
-  var wall_coords = [[0,0], [0, maxY], [maxX, 0], [maxX, maxY]];
+  var maxW = data.width;
+  var maxH = data.height;
+  var wall_coords = [];
 
-  for (var j = 1; j < maxY; j++) {
-    wall_coords.push([0, j]);
-    wall_coords.push([maxX, j])
+  for (var i = 0; i < maxW; i++) {
+    wall_coords.push([i, -1]);
+    wall_coords.push([i, maxH])
   }
 
-  for (var i = 1; i < maxX; i++) {
-    wall_coords.push([i, 0]);
-    wall_coords.push([i, maxY])
+  for (var j = 0; j < maxH; j++) {
+    wall_coords.push([-1, j]);
+    wall_coords.push([maxW, j])
   }
 
-
-  console.log(wall_coords.sort())
-
+  return wall_coords;
 }
-
-walls(startData)
 
 function start(data) {
   var startData = JSON.parse(data)
@@ -133,7 +149,7 @@ function murderSnake(dataJSON) {
   for (let i = 0; i < otherSnakes.length; i++){
     if (mySize > otherSnakes[i].coords.length){
       if (isSafeSpace(otherSnakes[i].coords[0]))
-        return true
+        return false //fix
     }
   }
   return false;
@@ -156,18 +172,18 @@ function getOtherSnakes(dataJSON){
   let otherSnakes = []
   for (let i = 0; i < snakes.length; i++){
     if (snakes[i].id !== dataJSON.you){
-      otherSnakes.push(snakes[i])
+      otherSnakes = otherSnakes.concat(snakes[i].coords)
     }
   }
   return otherSnakes
 }
 
-function addSnakesToDANGERZONE(dataJSON){
+function addSnakesToDANGERZONE(dataJSON){ //needs fixing?
   dangerSnakes = []
   snakes = dataJSON.snakes
   for (let i = 0; i < snakes.length; i++){
     //exclude the head of a smaller snake from dangerous coords so we can kill it
-    // also ignore our head and just figure out where our body is at
+    // also ignore our head and just figure out where our body is at (minus last segment)
     if (murderSnake(dataJSON) || snakes[i].id === dataJSON.you){
       for (let j = 1; j < snakes[i].coords.length; j++){
         dangerSnakes.push(snakes[i].coords[j])
@@ -178,27 +194,94 @@ function addSnakesToDANGERZONE(dataJSON){
       }
     }
   }
+  console.log("danger snakes: ", dangerSnakes);
   return dangerSnakes
+}
+
+function surrounded(move, danger_zones) {
+  var snake_head = getMySnake(move).coords[0];
+  var up  = [snake_head[0], snake_head[1] - 1];
+  var down = [snake_head[0], snake_head[1] + 1];
+  var right = [snake_head[0] + 1 , snake_head[1]];
+  var left = [snake_head[0] - 1 , snake_head[1]];
+  var up_arr = [];
+  var down_arr = [];
+  var right_arr = [];
+  var left_arr = [];
+
+  var surrounded_coords = [];
+
+  for (var i = 0; i < danger_zones.length; i++) {
+    var current_DZ_coord = danger_zones[i].toString();
+
+    if ( current_DZ_coord == [up[0]-1, up[1]].toString() ||
+      current_DZ_coord == [up[0], up[1]-1].toString() ||
+      current_DZ_coord == [up[0]+1, up[1]].toString() ) {
+
+      up_arr.push(current_DZ_coord)
+    }
+
+    if ( current_DZ_coord == [right[0], right[1]+1].toString() ||
+      current_DZ_coord == [right[0]+1, right[1]].toString() ||
+      current_DZ_coord == [right[0], right[1]-1].toString() ) {
+
+      right_arr.push(current_DZ_coord)
+    }
+
+    if ( current_DZ_coord == [down[0]-1, down[1]].toString() ||
+      current_DZ_coord == [down[0], down[1]+1].toString() ||
+      current_DZ_coord == [down[0]+1, down[1]].toString() ) {
+
+      down_arr.push(current_DZ_coord)
+    }
+
+    if ( current_DZ_coord == [left[0], left[1]+1].toString() ||
+      current_DZ_coord == [left[0]-1, left[1]].toString() ||
+      current_DZ_coord == [left[0], left[1]-1].toString() ) {
+
+      left_arr.push(current_DZ_coord)
+    }
+
+  }
+
+    if (up_arr.length == 3) {
+      surrounded_coords.push (up);
+    }
+
+    if (right_arr.length == 3 ) {
+      surrounded_coords.push (right);
+    }
+
+    if (left_arr.length == 3 ) {
+      surrounded_coords.push (left);
+    }
+
+    if (down_arr.length == 3) {
+      surrounded_coords.push (down);
+    }
+
+  return surrounded_coords;
 }
 
 function dangerZone(start, move) {
 // danger zones
   var danger_zones = []
-  var ourCoords = getMySnake(move)
-  var us = ourCoords.coords
 
-  console.log("our coord: ", us)
+//  1 - if space occupied by snake including your own body (minus the last segment and head)
+  var snake_coords = getOtherSnakes(move);
+  danger_zones = danger_zones.concat(snake_coords);
 
+//  2 - if space is a wall
+  var wall_coords = walls(start);
+  danger_zones = danger_zones.concat(wall_coords)
 
+  var interim_danger_zones = danger_zones.slice()
+//  3 - if space surrounded on 3 sides
+  var surrounded_coords = surrounded(move, interim_danger_zones);
+  danger_zones = danger_zones.concat(surrounded_coords);
 
-
-//  1 - if space occupied by snake including your own body
-//  2 - if space surrounded on 3 sides
-//  3 - if space is a wall
-// 4 -  last coord on a
-
-return danger_zones
+  console.log(danger_zones)
+  return danger_zones
 }
 
 dangerZone (startData, moveData)
-
