@@ -133,7 +133,7 @@ function start(data) {
 
 function move(move_data) {
 var data = {
-    move: 'up', // one of: ["up", "right", "down", "left"]
+    move: 'right', // one of: ["up", "right", "down", "left"]
     taunt: config.snake.taunt.move
   }
 
