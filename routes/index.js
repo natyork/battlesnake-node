@@ -5,13 +5,14 @@ var router  = express.Router();
 
 // API docs don't indicate that we need a GET '/' callback
 // Handle GET request to '/'
-// router.get(config.routes.info, function (req, res) {
-//   // Response data
-//   var data = {
-//   };
+router.get(config.routes.info, function (req, res) {
+  // Response data
+  var data = {
+    your_mom: "test"
+  };
 
-//   return res.json(data);
-// });
+  return res.json(data);
+});
 
 // Handle POST request to '/start'
 router.post(config.routes.start, function (req, res) {
