@@ -140,11 +140,14 @@ function checkInclusion(DZCoords, move){
 }
 
 function move(data) {
+  console.log('hello')
   let returnData = {status:200, taunt:getTaunt()}
   let us = getMySnake(data)
-  let head = us.coords[0]
-  dangerZone()
-  let moveCoord = prioritize()
+  console.log(us, 'us')
+  let head = us[0]
+  console.log('head', head)
+  dangerZone(startData, moveData)
+  let moveCoord = prioritize(dangerZones, data)
   if (typeof(moveCoord) === 'string'){
     returnData.taunt = moveCoord;
     return returnData;
@@ -161,6 +164,7 @@ function move(data) {
   if(head[0] > moveCoord[0]){
     returnData.move = "left"
   }
+  console.log('returning move to server', returnData)
   return returnData
 }
 //pass in our head location and the coords of where we want to get to
@@ -192,7 +196,6 @@ function potentialMoves(head, goal) {
 }
 
 let dangerZones = [[2,3],[1,1],[1,2],[1,3],[2,4]]
-prioritize(dangerZones,moveData)
 
 function prioritize(dangerZones, data) {
   us = getMySnake(data);
@@ -200,11 +203,13 @@ function prioritize(dangerZones, data) {
     let eatThis = scavenge(data, us)
     let safeFood = onTheHunt(dangerZones, eatThis, data)
     if (safeFood){
+      console.log('going for food')
       return safeFood
     }
   }
-  let tail = chaseTail(us)
+  let tail = chaseTail(us, dangerZones)
   if (tail) {
+    console.log('going for tail', us[0], tail)
     return tail
   }
   let potentialSafety = potentialMoves(us.coords[0], [maxX, maxY])
@@ -251,8 +256,8 @@ function onTheHunt(dangerZones, food, data) {
 }
 
 function chaseTail(us, dangerZones){
-  let head = us.coords[0]
-  let tail = us.coords[coords.length - 1]
+  let head = us[0]
+  let tail = us[us.length - 1]
   let potentials = potentialMoves(head, tail)
   for (let i = 0; i < potentials.length; i++) {
     if (!checkInclusion(dangerZones, potentials[i])){
@@ -320,7 +325,8 @@ function addSnakesToDANGERZONE(dataJSON){ //needs fixing?
 }
 
 function surrounded(move, danger_zones) {
-  var snake_head = getMySnake(move).coords[0];
+  var snake_head = getMySnake(move)[0];
+  console.log('snake head', snake_head)
   var up  = [snake_head[0], snake_head[1] - 1];
   var down = [snake_head[0], snake_head[1] + 1];
   var right = [snake_head[0] + 1 , snake_head[1]];
@@ -409,8 +415,9 @@ function dangerZone(start, move) {
   return danger_zones
 }
 
-getTaunt() {
+function getTaunt() {
   return 'Samuel L Jackson said it was cool if we stayed on the plane. We\'re that awesome.'
 }
 
-dangerZone (startData, moveData)
+// dangerZone (startData, moveData)
+move(moveData)
