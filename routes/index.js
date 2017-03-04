@@ -36,11 +36,11 @@ router.post(config.routes.move, function (req, res) {
 
   // Response data
 
-  var data = move(req.body)
-  // var data = {
-  //   move: 'up', // one of: ["up", "right", "down", "left"]
-  //   taunt: config.snake.taunt.move
-  // };
+  // var data = move(req.body)
+  var data = {
+    move: 'right', // one of: ["up", "right", "down", "left"]
+    taunt: config.snake.taunt.move
+  };
 
   return res.json(data);
 });
