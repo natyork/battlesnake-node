@@ -1,6 +1,7 @@
 var config  = require('../config.json');
 var express = require('express');
 var router  = express.Router();
+var move = require('./move.js')
 
 
 // API docs don't indicate that we need a GET '/' callback
@@ -34,10 +35,7 @@ router.post(config.routes.move, function (req, res) {
   // Do something here to generate your move
 
   // Response data
-  var data = {
-    move: 'up', // one of: ["up", "right", "down", "left"]
-    taunt: config.snake.taunt.move
-  };
+  var data = move.move()
 
   return res.json(data);
 });

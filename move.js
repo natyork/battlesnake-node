@@ -6,7 +6,6 @@ var startData = {
   height: 20,
   game_id: "abc123"
 }
-
 var moveData = {
   "you": "25229082-f0d7-4315-8c52-6b0ff23fb1fb",
   "width": 2,
@@ -16,11 +15,11 @@ var moveData = {
       "taunt": "git gud",
       "name": "my-snake",
       "id": "25229082-f0d7-4315-8c52-6b0ff23fb1fb",
-      "health_points": 93,
+      "health_points": 33,
       "coords": [
         [
-          0,
-          0
+          2,
+          3
         ],
         [
           0,
@@ -58,8 +57,8 @@ var moveData = {
   "food": [
     [
       1,
-      1
-    ]
+      4
+    ],
   ],
   "dead_snakes": [
     {
@@ -85,8 +84,7 @@ var moveData = {
   ]
 }
 
-
-
+const HUNGRY = 50;
 
 function walls(data) {
   var maxX = data.width;
@@ -108,23 +106,145 @@ function walls(data) {
 
 }
 
-walls(startData)
-
+// walls(startData)
 function start(data) {
   var startData = JSON.parse(data)
   return startData
 }
 
-function move(data) {
-  var dataJSON = JSON.parse(data);
-  // console.log(murderSnake(dataJSON))
-  // console.log('\n')
-  // console.log(getMySnake(dataJSON))
-  // console.log('\n')
-  console.log(getOtherSnakes(dataJSON))
-  // console.log('\n')
-  // console.log(addSnakesToDANGERZONE(dataJSON))
+function checkInclusion(DZCoords, move){
+  move = move.toString()
+  DZCoords = DZCoords.toString()
+  console.log(`checking ${move} vs ${DZCoords}`)
+  if (DZCoords.includes(move)) {
+    return true
+  }
+  return false
 }
+
+function move(data) {
+  let returnData = {status:200, taunt:'Samuel L Jackson said it was cool if we stayed on the plane. We\'re that awesome.'}
+  let us = getMySnake(data)
+  let head = us.coords[0]
+  dangerZone()
+  let moveCoord = prioritize()
+  if (typeof(moveCoord) === 'string'){
+    returnData.taunt = moveCoord;
+    return returnData;
+  }
+  if(head[0] < moveCoord[0]){
+    returnData.move = "right"
+  }
+  if(head[1] < moveCoord[1]){
+    returnData.move = "down"
+  }
+  if(head[1] > moveCoord[1]){
+    returnData.move = "up"
+  }
+  if(head[0] > moveCoord[0]){
+    returnData.move = "left"
+  }
+  return returnData
+}
+//pass in our head location and the coords of where we want to get to
+//returns an array of potential move locations to check against danger zones
+function potentialMoves(head, goal) {
+  console.log('head', head)
+  console.log('goal', goal)
+  let startX = head[0]
+  let startY = head[1]
+  let potentials = []
+  if(head[0] < goal[0]){
+    console.log('adding direction east')
+    potentials.push([startX+1, startY])
+  }
+  if(head[1] < goal[1]){
+    console.log('adding direction south')
+    potentials.push([startX,startY+1])
+  }
+  if(head[1] > goal[1]){
+    console.log('adding direction north')
+    potentials.push([startX, startY-1])
+  }
+  if(head[0] > goal[0]){
+    console.log('adding direction west')
+    potentials.push([startX-1, startY])
+  }
+  console.log(potentials)
+  return potentials;
+}
+
+let dangerZones = [[2,3],[1,1],[1,2],[1,3],[2,4]]
+prioritize(dangerZones,moveData)
+
+function prioritize(dangerZones, data) {
+  us = getMySnake(data);
+  if(us.health_points <= HUNGRY) {
+    let eatThis = scavenge(data, us)
+    let safeFood = onTheHunt(dangerZones, eatThis, data)
+    if (safeFood){
+      return safeFood
+    }
+  }
+  let tail = chaseTail(us)
+  if (tail) {
+    return tail
+  }
+  let potentialSafety = potentialMoves(us.coords[0], [maxX, maxY])
+  let safety;
+  for (let i = 0; i < potentialSafety.length; i++){
+    if (!checkInclusion(dangerZones, potentialSafety[i])){
+      return safety;
+    } else {
+      taunt = "I'll get you yet! And your little dog, too!!!!!!"
+      return taunt
+    }
+  }
+}
+
+
+function scavenge(data, us) {
+  let food = data.food;
+  let head = us.coords;
+  let diffHorizontal = Math.abs(food[0][0] - head[0]);
+  let diffVertical = Math.abs(food[0][1] - head[1]);
+  let priority = food[0];
+  let absoluteDiff = diffHorizontal + diffVertical;
+  for (let i = 1; i < food.length; i++){
+    diffHorizontal = Math.abs(food[i][0] - head[0]);
+    diffVertical = Math.abs(food[i][1] - head[1]);
+    totalDiff = diffHorizontal + diffVertical;
+    if (totalDiff < absoluteDiff){
+      absoluteDiff = totalDiff
+      priority = food[i]
+    }
+  }
+  return priority
+}
+
+function onTheHunt(dangerZones, food, data) {
+  let head = getMySnake(data).coords[0]
+  let potentials = potentialMoves(head, food)
+  for (let i = 0; i < potentials.length; i++) {
+    if (!checkInclusion(dangerZones, potentials[i])){
+      return potentials[i]
+    }
+  }
+  return false;
+}
+
+function chaseTail(us, dangerZones){
+  let head = us.coords[0]
+  let tail = us.coords[coords.length - 1]
+  let potentials = potentialMoves(head, tail)
+  for (let i = 0; i < potentials.length; i++) {
+    if (!checkInclusion(dangerZones, potentials[i])){
+      return potentials[i]
+    }
+  }
+  return false;
+}
+
 
 //I want to work on this more because it seems hella clunky right now
 function murderSnake(dataJSON) {
@@ -200,5 +320,6 @@ function dangerZone(start, move) {
 return danger_zones
 }
 
-dangerZone (startData, moveData)
+// dangerZone (startData, moveData)
+// move(moveData)
 
