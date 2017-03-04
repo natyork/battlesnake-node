@@ -161,7 +161,7 @@ function getMySnake(dataJSON) {
   var you = dataJSON.you
   for (var i = 0; i < snakes.length; i++){
     if (snakes[i].id === you) {
-      return snakes[i]
+      return snakes[i].coords
     }
   }
 }
@@ -270,6 +270,10 @@ function dangerZone(start, move) {
 //  1 - if space occupied by snake including your own body (minus the last segment and head)
   var snake_coords = getOtherSnakes(move);
   danger_zones = danger_zones.concat(snake_coords);
+
+  var my_snake_coords = getMySnake(move).pop();
+  console.log("my snake minus its tail ", my_snake_coords)
+  danger_zones = danger_zones.concat(my_snake_coords);
 
 //  2 - if space is a wall
   var wall_coords = walls(start);
