@@ -16,6 +16,7 @@ var router  = express.Router();
 // Handle POST request to '/start'
 router.post(config.routes.start, function (req, res) {
   // Do something here to start the game
+  board(req.body)
 
   // Response data
   var data = {
