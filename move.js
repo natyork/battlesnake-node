@@ -131,15 +131,13 @@ function start(data) {
   return startData
 }
 
-function move(data) {
-  var dataJSON = JSON.parse(data);
-  // console.log(murderSnake(dataJSON))
-  // console.log('\n')
-  // console.log(getMySnake(dataJSON))
-  // console.log('\n')
-  console.log(getOtherSnakes(dataJSON))
-  // console.log('\n')
-  // console.log(addSnakesToDANGERZONE(dataJSON))
+function move(move_data) {
+var data = {
+    move: 'up', // one of: ["up", "right", "down", "left"]
+    taunt: config.snake.taunt.move
+  }
+
+  return data
 }
 
 //I want to work on this more because it seems hella clunky right now
