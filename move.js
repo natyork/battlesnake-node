@@ -139,7 +139,7 @@ module.exports = function move(data) {
   var returnData = {status:200, taunt:getTaunt()}
   var us = getMySnake(data)
   var head = us[0]
-  var dangerZones = dangerZone(moveData)
+  var dangerZones = dangerZone(data)
   var moveCoord = prioritize(dangerZones, data)
   if (typeof(moveCoord) === 'string'){
     returnData.taunt = moveCoord;
