@@ -1,6 +1,6 @@
 var express = require('express')
 var router  = express.Router()
-var move = require('../move.js')
+var move = require('exports')
 
 
 // API docs don't indicate that we need a GET '/' callback
