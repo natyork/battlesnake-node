@@ -42,6 +42,7 @@ router.post('/move', function (req, res) {
       var data = move(JSON.parse(req.body))
 } catch (err) {
     console.log(err)
+    console.log(req.body)
 }
 
 
