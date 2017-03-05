@@ -130,8 +130,10 @@ function checkInclusion(DZCoords, move){
   move = move.toString()
   DZCoords = DZCoords.toString()
   if (DZCoords.includes(move)) {
+    console.log('compared and determined dangerous:', move, DZCoords)
     return true
   }
+  console.log('compared and determined safe:', move, DZCoords)
   return false
 }
 
