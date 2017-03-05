@@ -400,7 +400,7 @@ function dangerZone(move) {
   var snake_coords = getOtherSnakes(move);
   danger_zones = danger_zones.concat(snake_coords);
 
-  var my_snake_coords = getMySnake(move).pop();
+  var my_snake_coords = getMySnake(move);
   console.log("my snake minus its tail ", my_snake_coords)
   danger_zones = danger_zones.concat(my_snake_coords);
 
