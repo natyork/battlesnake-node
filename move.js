@@ -196,14 +196,14 @@ function potentialMoves(head, goal) {
 
 function prioritize(dangerZones, data) {
   us = getMySnake(data);
-  if(us.health_points <= HUNGRY) {
+
     var eatThis = scavenge(data, us)
     var safeFood = onTheHunt(dangerZones, eatThis, data)
     if (safeFood){
       console.log('going for food')
       return safeFood
     }
-  }
+
   var tail = chaseTail(us, dangerZones)
   if (tail) {
     console.log('going for tail', us[0], tail)
