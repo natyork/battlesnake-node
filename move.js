@@ -224,7 +224,7 @@ function prioritize(dangerZones, data) {
 
 function scavenge(data, us) {
   var food = data.food;
-  var head = us.coords;
+  var head = us;
   var diffHorizontal = Math.abs(food[0][0] - head[0]);
   var diffVertical = Math.abs(food[0][1] - head[1]);
   var priority = food[0];
