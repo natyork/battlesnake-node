@@ -242,7 +242,7 @@ function scavenge(data, us) {
 }
 
 function onTheHunt(dangerZones, food, data) {
-  var head = getMySnake(data).coords[0]
+  var head = getMySnake(data)[0]
   var potentials = potentialMoves(head, food)
   for (var i = 0; i < potentials.length; i++) {
     if (!checkInclusion(dangerZones, potentials[i])){
