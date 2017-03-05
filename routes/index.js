@@ -1,7 +1,6 @@
 var express = require('express')
 var router  = express.Router()
-var move = require('../move.js')
-
+var move = require('../move')
 
 // API docs don't indicate that we need a GET '/' callback
 // Handle GET request to '/'
@@ -22,7 +21,7 @@ router.post('/start', function (req, res) {
     color: "#DFFF00",
     name: "Trump Snake",
     head_url: "http://www.placecage.com/c/200/200", // optional, but encouraged!
-    taunt: "Let's do thisss thang!", // optional, but encouraged!
+    taunt: "var's do thisss thang!", // optional, but encouraged!
   }
 
   return res.json(data)

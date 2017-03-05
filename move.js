@@ -106,7 +106,7 @@ var filePath = "./testData.json";
 //   ]
 // }
 
-const HUNGRY = 50;
+var HUNGRY = 50;
 
 function walls(data) {
   var maxW = data.width;
@@ -140,12 +140,12 @@ function checkInclusion(DZCoords, move){
   return false
 }
 
-function move(data) {
-  let returnData = {status:200, taunt:getTaunt()}
-  let us = getMySnake(data)
-  let head = us[0]
-  let dangerZones = dangerZone(startData, moveData)
-  let moveCoord = prioritize(dangerZones, data)
+module.exports = function move(data) {
+  var returnData = {status:200, taunt:getTaunt()}
+  var us = getMySnake(data)
+  var head = us[0]
+  var dangerZones = dangerZone(startData, moveData)
+  var moveCoord = prioritize(dangerZones, data)
   if (typeof(moveCoord) === 'string'){
     returnData.taunt = moveCoord;
     return returnData;
@@ -166,15 +166,15 @@ function move(data) {
   return returnData
 }
 
-export{move}
+
 //pass in our head location and the coords of where we want to get to
 //returns an array of potential move locations to check against danger zones
 function potentialMoves(head, goal) {
   console.log('head', head)
   console.log('goal', goal)
-  let startX = head[0]
-  let startY = head[1]
-  let potentials = []
+  var startX = head[0]
+  var startY = head[1]
+  var potentials = []
   if(head[0] < goal[0]){
     console.log('adding direction east')
     potentials.push([startX+1, startY])
@@ -195,26 +195,26 @@ function potentialMoves(head, goal) {
   return potentials;
 }
 
-// let dangerZones = [[2,3],[1,1],[1,2],[1,3],[2,4]]
+// var dangerZones = [[2,3],[1,1],[1,2],[1,3],[2,4]]
 
 function prioritize(dangerZones, data) {
   us = getMySnake(data);
   if(us.health_points <= HUNGRY) {
-    let eatThis = scavenge(data, us)
-    let safeFood = onTheHunt(dangerZones, eatThis, data)
+    var eatThis = scavenge(data, us)
+    var safeFood = onTheHunt(dangerZones, eatThis, data)
     if (safeFood){
       console.log('going for food')
       return safeFood
     }
   }
-  let tail = chaseTail(us, dangerZones)
+  var tail = chaseTail(us, dangerZones)
   if (tail) {
     console.log('going for tail', us[0], tail)
     return tail
   }
-  let potentialSafety = potentialMoves(us[0], [0,0])
-  let safety;
-  for (let i = 0; i < potentialSafety.length; i++){
+  var potentialSafety = potentialMoves(us[0], [0,0])
+  var safety;
+  for (var i = 0; i < potentialSafety.length; i++){
     if (!checkInclusion(dangerZones, potentialSafety[i])){
       return safety;
     } else {
@@ -226,13 +226,13 @@ function prioritize(dangerZones, data) {
 
 
 function scavenge(data, us) {
-  let food = data.food;
-  let head = us.coords;
-  let diffHorizontal = Math.abs(food[0][0] - head[0]);
-  let diffVertical = Math.abs(food[0][1] - head[1]);
-  let priority = food[0];
-  let absoluteDiff = diffHorizontal + diffVertical;
-  for (let i = 1; i < food.length; i++){
+  var food = data.food;
+  var head = us.coords;
+  var diffHorizontal = Math.abs(food[0][0] - head[0]);
+  var diffVertical = Math.abs(food[0][1] - head[1]);
+  var priority = food[0];
+  var absoluteDiff = diffHorizontal + diffVertical;
+  for (var i = 1; i < food.length; i++){
     diffHorizontal = Math.abs(food[i][0] - head[0]);
     diffVertical = Math.abs(food[i][1] - head[1]);
     totalDiff = diffHorizontal + diffVertical;
@@ -245,9 +245,9 @@ function scavenge(data, us) {
 }
 
 function onTheHunt(dangerZones, food, data) {
-  let head = getMySnake(data).coords[0]
-  let potentials = potentialMoves(head, food)
-  for (let i = 0; i < potentials.length; i++) {
+  var head = getMySnake(data).coords[0]
+  var potentials = potentialMoves(head, food)
+  for (var i = 0; i < potentials.length; i++) {
     if (!checkInclusion(dangerZones, potentials[i])){
       return potentials[i]
     }
@@ -256,10 +256,10 @@ function onTheHunt(dangerZones, food, data) {
 }
 
 function chaseTail(us, dangerZones){
-  let head = us[0]
-  let tail = us[us.length - 1]
-  let potentials = potentialMoves(head, tail)
-  for (let i = 0; i < potentials.length; i++) {
+  var head = us[0]
+  var tail = us[us.length - 1]
+  var potentials = potentialMoves(head, tail)
+  for (var i = 0; i < potentials.length; i++) {
     if (!checkInclusion(dangerZones, potentials[i])){
       return potentials[i]
     }
@@ -270,9 +270,9 @@ function chaseTail(us, dangerZones){
 
 //I want to work on this more because it seems hella clunky right now
 function murderSnake(dataJSON) {
-  let mySize = getMySnake(dataJSON).coords.length
-  let otherSnakes = getOtherSnakes(dataJSON)
-  for (let i = 0; i < otherSnakes.length; i++){
+  var mySize = getMySnake(dataJSON).coords.length
+  var otherSnakes = getOtherSnakes(dataJSON)
+  for (var i = 0; i < otherSnakes.length; i++){
     if (mySize > otherSnakes[i].coords.length){
       if (isSafeSpace(otherSnakes[i].coords[0]))
         return false //fix
@@ -295,8 +295,8 @@ function getMySnake(dataJSON) {
 //return an array of snake objects that aren't us
 function getOtherSnakes(dataJSON){
   snakes = dataJSON.snakes
-  let otherSnakes = []
-  for (let i = 0; i < snakes.length; i++){
+  var otherSnakes = []
+  for (var i = 0; i < snakes.length; i++){
     if (snakes[i].id !== dataJSON.you){
       otherSnakes = otherSnakes.concat(snakes[i].coords)
     }
@@ -307,15 +307,15 @@ function getOtherSnakes(dataJSON){
 function addSnakesToDANGERZONE(dataJSON){ //needs fixing?
   dangerSnakes = []
   snakes = dataJSON.snakes
-  for (let i = 0; i < snakes.length; i++){
+  for (var i = 0; i < snakes.length; i++){
     //exclude the head of a smaller snake from dangerous coords so we can kill it
     // also ignore our head and just figure out where our body is at (minus last segment)
     if (murderSnake(dataJSON) || snakes[i].id === dataJSON.you){
-      for (let j = 1; j < snakes[i].coords.length; j++){
+      for (var j = 1; j < snakes[i].coords.length; j++){
         dangerSnakes.push(snakes[i].coords[j])
       }
     } else {
-      for (let j = 1; j < snakes[i].coords.length; j++){
+      for (var j = 1; j < snakes[i].coords.length; j++){
         dangerSnakes.push(snakes[i].coords[j])
       }
     }
@@ -415,7 +415,7 @@ function dangerZone(start, move) {
 }
 
 function getTaunt() {
-  const taunts = [
+  var taunts = [
   'Samuel L Jackson said it was cool if we stayed on the plane. We\'re that awesome.',
   'You can\'t handle the snake!',
   'I\'m going to eat you my pretty, and your little dog too!!!',
@@ -428,7 +428,7 @@ function getTaunt() {
   "Betelgeuse Betelgeuse Betelgeuse",
   "Just keep snaking, just keep snaking, just keep snaking snaking snaking WHAT DO WE DO WE SNAKE. SNAKE. SNAKE. SNAKE.",
   "Consider the coconut. Consider its tree.",
-  "Let'ssss get down to businesss to defeat . . the snakesssss",
+  "var'ssss get down to businesss to defeat . . the snakesssss",
   "Some people are worth melting for. But not you guys. You guys suck.",
   "Ohana means family. Family means nobody gets left behind. This applies to none of you and also eat my scales.",
   "This game just gets curiouser and curiouser",
