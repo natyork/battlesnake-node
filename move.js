@@ -1,110 +1,110 @@
 var fs = require("fs");
 var filePath = "./testData.json";
-var exports = module.exports = {};
 
+var exports = module.exports = {}
 
-var startData = {
-  width: 20,
-  height: 20,
-  game_id: "abc123"
-}
-var moveData = {
-  "you": "25229082-f0d7-4315-8c52-6b0ff23fb1fb",
-  "width": 2,
-  "turn": 0,
-  "snakes": [
-    {
-      "taunt": "git gud",
-      "name": "my-snake",
-      "id": "25229082-f0d7-4315-8c52-6b0ff23fb1fb",
-      "health_points": 33,
-      "coords": [
-        [
-          2,
-          3
-        ],
-        [
-          0,
-          0
-        ],
-        [
-          0,
-          0
-        ]
-      ]
-    },
-    {
-      "taunt": "gotta go fast",
-      "name": "other-snake",
-      "id": "0fd33b05-37dd-419e-b44f-af9936a0a00c",
-      "health_points": 50,
-      "coords": [
-        [
-          3,
-          0
-        ],
-        [
-          1,
-          0
-        ],
-        [
-          1,
-          0
-        ]
-      ]
-    },
-    {
-      "taunt": "goat gud",
-      "name": "your-snake",
-      "id": "12345-f0d7-4315-8c52-6b0ff23fb1fb",
-      "health_points": 93,
-      "coords": [
-        [
-          2,
-          0
-        ],
-        [
-          2,
-          1
-        ],
-        [
-          1,
-          1
-        ]
-      ]
-    }
-  ],
-  "height": 2,
-  "game_id": "870d6d79-93bf-4941-8d9e-944bee131167",
-  "food": [
-    [
-      1,
-      4
-    ],
-  ],
-  "dead_snakes": [
-    {
-      "taunt": "gotta go fast",
-      "name": "other-snake",
-      "id": "c4e48602-197e-40b2-80af-8f89ba005ee9",
-      "health_points": 50,
-      "coords": [
-        [
-          5,
-          0
-        ],
-        [
-          5,
-          0
-        ],
-        [
-          5,
-          0
-        ]
-      ]
-    }
-  ]
-}
+// var startData = {
+//   width: 20,
+//   height: 20,
+//   game_id: "abc123"
+// }
+// var moveData = {
+//   "you": "25229082-f0d7-4315-8c52-6b0ff23fb1fb",
+//   "width": 2,
+//   "turn": 0,
+//   "snakes": [
+//     {
+//       "taunt": "git gud",
+//       "name": "my-snake",
+//       "id": "25229082-f0d7-4315-8c52-6b0ff23fb1fb",
+//       "health_points": 33,
+//       "coords": [
+//         [
+//           2,
+//           3
+//         ],
+//         [
+//           0,
+//           0
+//         ],
+//         [
+//           0,
+//           0
+//         ]
+//       ]
+//     },
+//     {
+//       "taunt": "gotta go fast",
+//       "name": "other-snake",
+//       "id": "0fd33b05-37dd-419e-b44f-af9936a0a00c",
+//       "health_points": 50,
+//       "coords": [
+//         [
+//           3,
+//           0
+//         ],
+//         [
+//           1,
+//           0
+//         ],
+//         [
+//           1,
+//           0
+//         ]
+//       ]
+//     },
+//     {
+//       "taunt": "goat gud",
+//       "name": "your-snake",
+//       "id": "12345-f0d7-4315-8c52-6b0ff23fb1fb",
+//       "health_points": 93,
+//       "coords": [
+//         [
+//           2,
+//           0
+//         ],
+//         [
+//           2,
+//           1
+//         ],
+//         [
+//           1,
+//           1
+//         ]
+//       ]
+//     }
+//   ],
+//   "height": 2,
+//   "game_id": "870d6d79-93bf-4941-8d9e-944bee131167",
+//   "food": [
+//     [
+//       1,
+//       4
+//     ],
+//   ],
+//   "dead_snakes": [
+//     {
+//       "taunt": "gotta go fast",
+//       "name": "other-snake",
+//       "id": "c4e48602-197e-40b2-80af-8f89ba005ee9",
+//       "health_points": 50,
+//       "coords": [
+//         [
+//           5,
+//           0
+//         ],
+//         [
+//           5,
+//           0
+//         ],
+//         [
+//           5,
+//           0
+//         ]
+//       ]
+//     }
+//   ]
+// }
 
 const HUNGRY = 50;
 
@@ -134,7 +134,6 @@ function start(data) {
 function checkInclusion(DZCoords, move){
   move = move.toString()
   DZCoords = DZCoords.toString()
-  console.log(`checking ${move} vs ${DZCoords}`)
   if (DZCoords.includes(move)) {
     return true
   }
@@ -142,14 +141,11 @@ function checkInclusion(DZCoords, move){
 }
 
 exports.move = function (data) {
-  console.log('hello')
   let returnData = {status:200, taunt:getTaunt()}
   let us = getMySnake(data)
-  console.log(us, 'us')
   let head = us[0]
-  console.log('head', head)
-  let danger_zone = dangerZone(startData, moveData)
-  let moveCoord = prioritize(danger_zone, data)
+  let dangerZones = dangerZone(startData, moveData)
+  let moveCoord = prioritize(dangerZones, data)
   if (typeof(moveCoord) === 'string'){
     returnData.taunt = moveCoord;
     return returnData;
@@ -169,8 +165,6 @@ exports.move = function (data) {
   console.log('returning move to server', returnData)
   return returnData
 }
-
-// exports.move(moveData)
 //pass in our head location and the coords of where we want to get to
 //returns an array of potential move locations to check against danger zones
 function potentialMoves(head, goal) {
@@ -197,10 +191,9 @@ function potentialMoves(head, goal) {
   }
   console.log(potentials)
   return potentials;
-
 }
 
-let dangerZones = [[2,3],[1,1],[1,2],[1,3],[2,4]]
+// let dangerZones = [[2,3],[1,1],[1,2],[1,3],[2,4]]
 
 function prioritize(dangerZones, data) {
   us = getMySnake(data);
@@ -223,7 +216,7 @@ function prioritize(dangerZones, data) {
     if (!checkInclusion(dangerZones, potentialSafety[i])){
       return safety;
     } else {
-      taunt = "I'll get you yet! And your little dog, too!!!!!!"
+      taunt = "I coulda had class. I coulda been a contendah"
       return taunt
     }
   }
@@ -416,12 +409,30 @@ function dangerZone(start, move) {
   var surrounded_coords = surrounded(move, interim_danger_zones);
   danger_zones = danger_zones.concat(surrounded_coords);
 
-  console.log(danger_zones)
   return danger_zones
 }
 
 function getTaunt() {
-  return 'Samuel L Jackson said it was cool if we stayed on the plane. We\'re that awesome.'
+  const taunts = [
+  'Samuel L Jackson said it was cool if we stayed on the plane. We\'re that awesome.',
+  'You can\'t handle the snake!',
+  'I\'m going to eat you my pretty, and your little dog too!!!',
+  "Who's a clever girl? I'm a clever girl",
+  "Stop trying to make fetch happen. It's not gonna happen.",
+  "Aca-scuse me.",
+  "Don't tread on me.",
+  "Beatrice, cancel my appointments. I've got a game to crush.",
+  "Life uh uh uh uh uh finds...a way",
+  "Betelgeuse Betelgeuse Betelgeuse",
+  "Just keep snaking, just keep snaking, just keep snaking snaking snaking WHAT DO WE DO WE SNAKE. SNAKE. SNAKE. SNAKE.",
+  "Consider the coconut. Consider its tree.",
+  "Let'ssss get down to businesss to defeat . . the snakesssss",
+  "Some people are worth melting for. But not you guys. You guys suck.",
+  "Ohana means family. Family means nobody gets left behind. This applies to none of you and also eat my scales.",
+  "This game just gets curiouser and curiouser",
+  "Cruella de Vil can make a snakeskin coat of everyone once I'm done with you.",
+  "Stop saying Jack could've fit on the floating door. It was a BUOYANCY problem not a SIZE problem. UGH.",
+  "Have you seen Hidden Figures yet? Great movie."
+  ]
+  return taunts[Math.floor(Math.random() * (19 - 0))]
 }
-
-// dangerZone (startData, moveData)
