@@ -148,8 +148,8 @@ exports.move = function (data) {
   console.log(us, 'us')
   let head = us[0]
   console.log('head', head)
-  dangerZone(startData, moveData)
-  let moveCoord = prioritize(dangerZones, data)
+  let danger_zone = dangerZone(startData, moveData)
+  let moveCoord = prioritize(danger_zone, data)
   if (typeof(moveCoord) === 'string'){
     returnData.taunt = moveCoord;
     return returnData;
@@ -169,6 +169,8 @@ exports.move = function (data) {
   console.log('returning move to server', returnData)
   return returnData
 }
+
+exports.move(moveData)
 //pass in our head location and the coords of where we want to get to
 //returns an array of potential move locations to check against danger zones
 function potentialMoves(head, goal) {
@@ -215,7 +217,7 @@ function prioritize(dangerZones, data) {
     console.log('going for tail', us[0], tail)
     return tail
   }
-  let potentialSafety = potentialMoves(us.coords[0], [maxX, maxY])
+  let potentialSafety = potentialMoves(us[0], [0,0])
   let safety;
   for (let i = 0; i < potentialSafety.length; i++){
     if (!checkInclusion(dangerZones, potentialSafety[i])){
