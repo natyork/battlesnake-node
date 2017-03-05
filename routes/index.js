@@ -34,12 +34,13 @@ router.post('/move', function (req, res) {
 
   // Response data
 
-  var data = {
-    move: 'right', // one of: ['up','down','left','right']
-    taunt: 'Outta my way, snake!', // optional, but encouraged!
-  }
+  // var data = {
+  //   move: 'right', // one of: ['up','down','left','right']
+  //   taunt: 'Outta my way, snake!', // optional, but encouraged!
+  // }
 
-  // var data = move.move(req.body)
+
+  var data = move.move(JSON.parse(req.body))
 
   return res.json(data);
 });
