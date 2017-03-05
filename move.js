@@ -258,6 +258,7 @@ function chaseTail(us, dangerZones){
   var potentials = potentialMoves(head, tail)
   for (var i = 0; i < potentials.length; i++) {
     if (!checkInclusion(dangerZones, potentials[i])){
+      console.log("potentials: ", potentials[i])
       return potentials[i]
     }
   }
