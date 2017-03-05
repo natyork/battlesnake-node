@@ -170,7 +170,7 @@ exports.move = function (data) {
   return returnData
 }
 
-exports.move(moveData)
+// exports.move(moveData)
 //pass in our head location and the coords of where we want to get to
 //returns an array of potential move locations to check against danger zones
 function potentialMoves(head, goal) {
