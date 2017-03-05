@@ -39,7 +39,7 @@ router.post('/move', function (req, res) {
   // }
 
   try {
-      var data = move(JSON.parse(req.body))
+      var data = move(req.body)
 } catch (err) {
     console.log(err)
     console.log(req.body)
