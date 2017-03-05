@@ -175,18 +175,20 @@ function potentialMoves(head, goal) {
   var startY = head[1]
   var potentials = []
   if(head[0] < goal[0]){
+    if (!checkInclusion(head, [startX+1, startY])){
       console.log('adding direction east')
-    potentials.push([startX+1, startY])
+      potentials.push([startX+1, startY])
+    }
   }
-  if(head[1] < goal[1]){
+  if(head[1] < goal[1] && (!checkInclusion(head,[startX,startY+1]))){
     console.log('adding direction south')
     potentials.push([startX,startY+1])
   }
-  if(head[1] > goal[1]){
+  if(head[1] > goal[1] && (!checkInclusion(head, [startX, startY-1]))){
     console.log('adding direction north')
     potentials.push([startX, startY-1])
   }
-  if(head[0] > goal[0]){
+  if(head[0] > goal[0] && (!checkInclusion(head, [startX-1, startY] ))){
     console.log('adding direction west')
     potentials.push([startX-1, startY])
   }
