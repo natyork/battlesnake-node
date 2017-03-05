@@ -1,7 +1,7 @@
 var fs = require("fs");
 var filePath = "./testData.json";
 
-var exports = module.exports = {}
+
 
 // var startData = {
 //   width: 20,
@@ -140,7 +140,7 @@ function checkInclusion(DZCoords, move){
   return false
 }
 
-exports.move = function (data) {
+function move(data) {
   let returnData = {status:200, taunt:getTaunt()}
   let us = getMySnake(data)
   let head = us[0]
@@ -165,6 +165,8 @@ exports.move = function (data) {
   console.log('returning move to server', returnData)
   return returnData
 }
+
+export{move}
 //pass in our head location and the coords of where we want to get to
 //returns an array of potential move locations to check against danger zones
 function potentialMoves(head, goal) {
