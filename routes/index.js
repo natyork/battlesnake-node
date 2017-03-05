@@ -39,7 +39,7 @@ router.post('/move', function (req, res) {
   //   taunt: 'Outta my way, snake!', // optional, but encouraged!
   // }
 
-  var data = move.move()
+  var data = move.move(req.body)
 
   return res.json(data);
 });

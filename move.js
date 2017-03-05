@@ -139,7 +139,7 @@ function checkInclusion(DZCoords, move){
   return false
 }
 
-function move(data) {
+exports.move = function (data) {
   console.log('hello')
   let returnData = {status:200, taunt:getTaunt()}
   let us = getMySnake(data)
@@ -421,4 +421,4 @@ function getTaunt() {
 }
 
 // dangerZone (startData, moveData)
-move(moveData)
+var exports = module.exports = {}
