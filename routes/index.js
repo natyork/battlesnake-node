@@ -19,9 +19,9 @@ router.post('/start', function (req, res) {
   // Response data
   var data = {
     color: "#DFFF00",
-    name: "Trump Snake",
-    head_url: "http://www.placecage.com/c/200/200", // optional, but encouraged!
-    taunt: "var's do thisss thang!", // optional, but encouraged!
+    name: "Raptor Snake",
+    head_url: "http://vignette3.wikia.nocookie.net/jurassicpark/images/8/84/JP-Rayarnold.jpg/revision/latest?cb=20111125054803", // optional, but encouraged!
+    taunt: "hold on to your butts", // optional, but encouraged!
   }
 
   return res.json(data)
