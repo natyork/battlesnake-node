@@ -1,5 +1,7 @@
 var fs = require("fs");
 var filePath = "./testData.json";
+var exports = module.exports = {};
+
 
 var startData = {
   width: 20,
@@ -421,4 +423,3 @@ function getTaunt() {
 }
 
 // dangerZone (startData, moveData)
-var exports = module.exports = {}
