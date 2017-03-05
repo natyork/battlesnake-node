@@ -126,11 +126,6 @@ function walls(data) {
   return wall_coords;
 }
 
-function start(data) {
-  var startData = JSON.parse(data)
-  return startData
-}
-
 function checkInclusion(DZCoords, move){
   move = move.toString()
   DZCoords = DZCoords.toString()
@@ -144,7 +139,7 @@ module.exports = function move(data) {
   var returnData = {status:200, taunt:getTaunt()}
   var us = getMySnake(data)
   var head = us[0]
-  var dangerZones = dangerZone(startData, moveData)
+  var dangerZones = dangerZone(moveData)
   var moveCoord = prioritize(dangerZones, data)
   if (typeof(moveCoord) === 'string'){
     returnData.taunt = moveCoord;
@@ -390,7 +385,7 @@ function surrounded(move, danger_zones) {
   return surrounded_coords;
 }
 
-function dangerZone(start, move) {
+function dangerZone(move) {
 // danger zones
   var danger_zones = []
 
@@ -403,7 +398,7 @@ function dangerZone(start, move) {
   danger_zones = danger_zones.concat(my_snake_coords);
 
 //  2 - if space is a wall
-  var wall_coords = walls(start);
+  var wall_coords = walls(move);
   danger_zones = danger_zones.concat(wall_coords)
 
   var interim_danger_zones = danger_zones.slice()
